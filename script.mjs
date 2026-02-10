@@ -77,7 +77,69 @@ function displayBookmarks () {
 
 }
 
+function addBookmark(event) {
+	event.preventDefault();
+
+	const urlInput = document.getElementById('bookmark-url');
+	const url = urlInput.value.trim();
+	const titleInput = document.getElementById('bookmark-title');
+	const title = titleInput.value.trim();
+	const descriptionInput = document.getElementById('description');
+	const description = descriptionInput.value.trim();
+	const userSelector = document.getElementById('user-select');
+	const userId = userSelector.value;
+
+	if (userId === 'Select a user') {
+		alert('Please select a user.');
+		return;
+	}
+
+	if (!url || !title || !description) {
+		alert('Please enter a URL, a title, and a description.');
+		return;
+	}
+
+	if (!isValidUrl(url)) {
+		alert('Please enter a valid URL.');
+		return;
+	}
+
+	const userBookmarks = getData(userId) || [];
+	const newBookmark = {
+		url,
+		title,
+		description,
+		likes: 0,
+		timestamp: new Date().toLocaleString(),
+	};
+	userBookmarks.push(newBookmark);
+	setData(userId, userBookmarks);
+	urlInput.value = '';
+	titleInput.value = '';
+	descriptionInput.value = '';
+	displayBookmarks();
+	alert('Bookmark added successfully!');
+}
+
+function isValidUrl(url) {
+	try {
+		new URL(url.startsWith('http') ? url : 'https://' + url);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function setupEventListeners() {
+	const addBookmarkForm = document.getElementById('add-bookmark-form');
+	addBookmarkForm.addEventListener('submit', addBookmark);
+
+	const userSelector = document.getElementById('user-select');
+	userSelector.addEventListener('change', displayBookmarks);
+}
+
+
 window.onload = function () {
 	populateUserSelector();
-	displayBookmarks();
+	setupEventListeners();
 };
