@@ -67,11 +67,12 @@ function displayBookmarks () {
 		});
 	
 	} else {
-		const noData = document.createElement("div")
-      	noData.innerHTML = `
-			<h3> There are no bookmarks for this user yet...!!</h3>
-            `
-
+		const noData = document.createElement("li")
+		noData.class
+      	noData.innerHTML = 
+		`<h2 class='no-data'>
+			There are no bookmarks for this user yet!
+		</h2>`
       	bookmarkList.appendChild(noData);
 	}
 

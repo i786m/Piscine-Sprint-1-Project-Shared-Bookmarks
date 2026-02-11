@@ -325,3 +325,8 @@ body {
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       display: none;
 }
+
+.no-data{
+      font-size: 20px;
+      font-weight: 500;
+}
