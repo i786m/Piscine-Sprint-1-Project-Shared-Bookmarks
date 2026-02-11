@@ -23,7 +23,7 @@ function populateUserSelector() {
 function displayBookmarks () {
 	const selectedUser   = document.getElementById('user-select');
 	const bookmarkList   = document.getElementById("bookmark-list");
-	const existData 	   = getData(selectedUser.value)
+	const existData 	 = getData(selectedUser.value)
 	
 	bookmarkList.innerHTML = "";
 
@@ -77,7 +77,79 @@ function displayBookmarks () {
 
 }
 
+function addBookmark(event) {
+	event.preventDefault();
+
+	const urlInput = document.getElementById('bookmark-url');
+	const url = urlInput.value.trim();
+	const titleInput = document.getElementById('bookmark-title');
+	const title = titleInput.value.trim();
+	const descriptionInput = document.getElementById('description');
+	const description = descriptionInput.value.trim();
+	const userSelector = document.getElementById('user-select');
+	const userId = userSelector.value;
+
+	if (userId === 'Select a user') {
+		showFeedback('Please select a user.', true);
+		return;
+	}
+
+	if (!url || !title || !description) {
+		showFeedback('Please enter a URL, a title, and a description.', true);
+		return;
+	}
+
+	if (!isValidUrl(url)) {
+		showFeedback('Please enter a valid URL.', true);
+		return;
+	}
+
+	const userBookmarks = getData(userId) || [];
+	const newBookmark = {
+		url,
+		title,
+		description,
+		likes: 0,
+		timestamp: new Date().toLocaleString(),
+	};
+	userBookmarks.push(newBookmark);
+	setData(userId, userBookmarks);
+	urlInput.value = '';
+	titleInput.value = '';
+	descriptionInput.value = '';
+	displayBookmarks();
+	showFeedback('Bookmark added successfully!');
+}
+
+function showFeedback(message, isError = false) {
+	const feedback = document.getElementById('form-feedback');
+	feedback.textContent = message;
+	feedback.style.background = isError ? '#c0392b' : '#218838';
+	feedback.style.display = 'block';
+	setTimeout(() => {
+		feedback.style.display = 'none';
+	}, 3000);
+}
+
+function isValidUrl(string) {
+	try {
+		new URL(string.startsWith('http') ? string : 'https://' + string);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function setupEventListeners() {
+	const addBookmarkForm = document.getElementById('add-bookmark-form');
+	addBookmarkForm.addEventListener('submit', addBookmark);
+
+	const userSelector = document.getElementById('user-select');
+	userSelector.addEventListener('change', displayBookmarks);
+}
+
+
 window.onload = function () {
 	populateUserSelector();
-	displayBookmarks();
+	setupEventListeners();
 };
