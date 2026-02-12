@@ -21,30 +21,30 @@ function populateUserSelector() {
 }
 
 function displayBookmarks() {
-	const selectedUser = document.getElementById('user-select');
+	const userId       = document.getElementById('user-select').value;
 	const bookmarkList = document.getElementById('bookmark-list');
 	const bookmarksListTitle = document.getElementById('bookmarks-list-title');
-	const existData = getData(selectedUser.value);
+	const bookmarks   = getData(userId);
 
 	
 	bookmarksListTitle.textContent = `Bookmarks for User ${selectedUser.value}`;
 	bookmarkList.innerHTML = '';
 
-	if (existData && existData.length > 0) {
+	if (bookmarks && bookmarks.length > 0) {
 		// Accessibility: Added ARIA labels to buttons for screen reader clarity
 		// Accessibility: Kept heading structure consistent (see index.html)
 
-		[...existData].reverse().forEach((bookmarkData) => {
+		[...bookmarks].reverse().forEach((bookmark) => {
 			const listItem = document.createElement('li');
 			listItem.innerHTML = `
 				   <div class="bookmark-list-item" >
-					   <a href="${bookmarkData.url}" target="_blank">
-					   ${bookmarkData.title}
+					   <a href="${bookmark.url}" target="_blank">
+					   ${bookmark.title}
 					   </a>
-					   <p> ${bookmarkData.description} </p>
-					   <button class="like-bookmark" type="button" aria-label="Like this bookmark"> Likes ${bookmarkData.likes} </button>
+					   <p> ${bookmark.description} </p>
+					   <button class="like-bookmark" type="button" aria-label="Like this bookmark"> Likes ${bookmark.likes} </button>
 					   <button class="copy-link" type="button" aria-label="Copy bookmark URL to clipboard"> Copy Link </button>
-					   <p id="bookmark-timestamp"> ${bookmarkData.timestamp}</p>
+					   <p id="bookmark-timestamp"> ${bookmark.timestamp}</p>
 				   </div>
 			   `;
 			bookmarkList.appendChild(listItem);
@@ -52,15 +52,15 @@ function displayBookmarks() {
 			// add event listener to like the bookmark and count the likes
 			const likesBookmark = listItem.querySelector('.like-bookmark');
 			likesBookmark.addEventListener('click', function () {
-				bookmarkData.likes += 1;
-				setData(selectedUser.value, existData);
-				selectedUser.dispatchEvent(new Event('change'));
+				bookmark.likes += 1;
+				setData(userId, bookmarks);
+				document.getElementById('user-select').dispatchEvent(new Event('change'));
 			});
 
 			// add copy link button for each bookmark, implement copy-to-clipboard
 			const copyLinkBtn = listItem.querySelector('.copy-link');
 			copyLinkBtn.addEventListener('click', function () {
-				navigator.clipboard.writeText(bookmarkData.url);
+				navigator.clipboard.writeText(bookmark.url);
 				copyLinkBtn.textContent = 'Copied!';
 				setTimeout(() => {
 					copyLinkBtn.textContent = 'Copy Link';
@@ -86,14 +86,10 @@ function displayBookmarks() {
 function addBookmark(event) {
 	event.preventDefault();
 
-	const urlInput = document.getElementById('bookmark-url');
-	const url = urlInput.value.trim();
-	const titleInput = document.getElementById('bookmark-title');
-	const title = titleInput.value.trim();
-	const descriptionInput = document.getElementById('description');
-	const description = descriptionInput.value.trim();
-	const userSelector = document.getElementById('user-select');
-	const userId = userSelector.value;
+	const url 		= document.getElementById('bookmark-url').value.trim();
+	const title 	= document.getElementById('bookmark-title').value.trim();
+	const description = document.getElementById('description').value.trim();
+	const userId 	= document.getElementById('user-select').value;
 
 	if (userId === 'Select a user') {
 		showFeedback('Please select a user.', true);
@@ -120,9 +116,7 @@ function addBookmark(event) {
 	};
 	userBookmarks.push(newBookmark);
 	setData(userId, userBookmarks);
-	urlInput.value = '';
-	titleInput.value = '';
-	descriptionInput.value = '';
+	event.target.reset();
 	displayBookmarks();
 	showFeedback('Bookmark added successfully!');
 }
