@@ -12,7 +12,7 @@ function populateUserSelector() {
 	defaultOption.disabled = true;
 	userSelector.appendChild(defaultOption);
 
-	users.forEach(user => {
+	users.forEach((user) => {
 		const option = document.createElement('option');
 		option.value = user;
 		option.textContent = `User ${user}`;
@@ -20,62 +20,67 @@ function populateUserSelector() {
 	});
 }
 
-function displayBookmarks () {
-	const selectedUser   = document.getElementById('user-select');
-	const bookmarkList   = document.getElementById("bookmark-list");
-	const existData 	 = getData(selectedUser.value)
-	
-	bookmarkList.innerHTML = "";
+function displayBookmarks() {
+	const selectedUser = document.getElementById('user-select');
+	const bookmarkList = document.getElementById('bookmark-list');
+	const bookmarksListTitle = document.getElementById('bookmarks-list-title');
+	const existData = getData(selectedUser.value);
 
-	if( existData && existData.length > 0 ) {
+	
+	bookmarksListTitle.textContent = `Bookmarks for User ${selectedUser.value}`;
+	bookmarkList.innerHTML = '';
+
+	if (existData && existData.length > 0) {
+		// Accessibility: Added ARIA labels to buttons for screen reader clarity
+		// Accessibility: Kept heading structure consistent (see index.html)
+
 		[...existData].reverse().forEach((bookmarkData) => {
-			const listItem = document.createElement("li");
-			
+			const listItem = document.createElement('li');
 			listItem.innerHTML = `
-				<div class="bookmark-list-item" >
-					<a href="${bookmarkData.url}" target="_blank">
-					${bookmarkData.title}
-					</a>
-					<p> ${bookmarkData.description} </p>
-					<button class="like-bookmark" type="button" > Likes ${bookmarkData.likes} </button>
-					<button class="copy-link" type= "button" > Copy Link </button>
-					<p id="bookmark-timestamp"> ${bookmarkData.timestamp}</p>
-				</div>
-			`
-			
+				   <div class="bookmark-list-item" >
+					   <a href="${bookmarkData.url}" target="_blank">
+					   ${bookmarkData.title}
+					   </a>
+					   <p> ${bookmarkData.description} </p>
+					   <button class="like-bookmark" type="button" aria-label="Like this bookmark"> Likes ${bookmarkData.likes} </button>
+					   <button class="copy-link" type="button" aria-label="Copy bookmark URL to clipboard"> Copy Link </button>
+					   <p id="bookmark-timestamp"> ${bookmarkData.timestamp}</p>
+				   </div>
+			   `;
 			bookmarkList.appendChild(listItem);
 
 			// add event listener to like the bookmark and count the likes
-        		const likesBookmark = listItem.querySelector(".like-bookmark");
-			likesBookmark.addEventListener('click', function() {
-				bookmarkData.likes += 1
-
+			const likesBookmark = listItem.querySelector('.like-bookmark');
+			likesBookmark.addEventListener('click', function () {
+				bookmarkData.likes += 1;
 				setData(selectedUser.value, existData);
 				selectedUser.dispatchEvent(new Event('change'));
 			});
 
-			// add copy link button for each bookmark, implement copy-to-clipboard 
-        		const copyLinkBtn = listItem.querySelector(".copy-link");
-			copyLinkBtn.addEventListener("click", function() {
+			// add copy link button for each bookmark, implement copy-to-clipboard
+			const copyLinkBtn = listItem.querySelector('.copy-link');
+			copyLinkBtn.addEventListener('click', function () {
 				navigator.clipboard.writeText(bookmarkData.url);
-          			copyLinkBtn.textContent = "Copied!";
-
+				copyLinkBtn.textContent = 'Copied!';
 				setTimeout(() => {
-					copyLinkBtn.textContent = "Copy Link";
+					copyLinkBtn.textContent = 'Copy Link';
 				}, 1000);
 			});
 		});
-	
 	} else {
-		const noData = document.createElement("li")
-		noData.class
-      	noData.innerHTML = 
-		`<h2 class='no-data'>
-			There are no bookmarks for this user yet!
-		</h2>`
-      	bookmarkList.appendChild(noData);
+		// Accessibility: Use semantic markup and live region for no-data message
+		const noData = document.createElement('div');
+		noData.className = 'no-data';
+		noData.setAttribute('role', 'status'); // Announces status changes
+		noData.setAttribute('aria-live', 'polite'); // Screen readers will announce updates
+		noData.textContent = 'There are no bookmarks for this user yet!';
+		bookmarkList.appendChild(noData);
 	}
 
+	// Accessibility: Add aria-live to bookmark list for screen reader updates
+	document
+		.getElementById('bookmark-list')
+		.setAttribute('aria-live', 'polite');
 }
 
 function addBookmark(event) {
@@ -148,7 +153,6 @@ function setupEventListeners() {
 	const userSelector = document.getElementById('user-select');
 	userSelector.addEventListener('change', displayBookmarks);
 }
-
 
 window.onload = function () {
 	populateUserSelector();

@@ -10,15 +10,20 @@
 </head>
 
 <body>
-  <main id="main-content">
 
-      <div id="user-selection-section">
-        <label class="screen-reader-only" for="user-select">Select User</label>
-        <select  id="user-select">
-          <!-- User options will be dynamically inserted here -->
-        </select>
+  <header>
+    <div id="user-selection-section">
+      <label class="screen-reader-only" for="user-select">Select User</label>
+      <select id="user-select">
+        <!-- User options will be dynamically inserted here -->
+      </select>
     </div>
-
+    <div id="app-title">
+      <h1>Shared Bookmarks</h1>
+    </div>
+  </header>
+  
+  <main id="main-content">
 
     <div id="bookmark-section">
       <div>
@@ -39,7 +44,7 @@
 
       <div>
         <section id="bookmark-list-section">
-          <h1>Shared Bookmarks</h1>
+          <h2 id="bookmarks-list-title">Bookmarks</h2>
           <ul id="bookmark-list">
             <!-- Bookmarks will be dynamically inserted here -->
           </ul>
