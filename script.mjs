@@ -77,7 +77,6 @@ export function displayBookmarks() {
 	} else {	
 		const noData = document.createElement('li');
 		noData.className = 'no-data';
-		noData.setAttribute('role', 'status'); 
 		noData.textContent = 'There are no bookmarks for this user yet!';
 		bookmarkList.appendChild(noData);
 	}
