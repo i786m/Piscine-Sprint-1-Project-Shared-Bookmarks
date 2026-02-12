@@ -58,7 +58,7 @@ export function displayBookmarks() {
 			const likesBookmark = listItem.querySelector('.like-bookmark');
 			likesBookmark.addEventListener('click', function () {
 				bookmark.likes += 1;
-				setData(userId, bookmarks);
+				setData(userId, sortedBookmarks);
 				document
 					.getElementById('user-select')
 					.dispatchEvent(new Event('change'));
