@@ -20,22 +20,20 @@ function populateUserSelector() {
 	});
 }
 
-function getSortedBookmarks(userId){
-  const bookmarks = getData(userId)
-	console.log(bookmarks)
-	const sorted = 
-	[...bookmarks].sort((a, b) => new Date(b.timestamp)-new Date(a.timestamp));
-  console.log(sorted)
-	return sorted
+function getSortedBookmarks(userId) {
+	const bookmarks = getData(userId) || [];
+	const sortedBookmarks = [...bookmarks].sort((a, b) => {
+		return new Date(b.timestamp) - new Date(a.timestamp);
+	});
+	return sortedBookmarks;
 }
 
-
 function displayBookmarks() {
-	const userId       = document.getElementById('user-select').value;
+	const userId = document.getElementById('user-select').value;
 	const bookmarkList = document.getElementById('bookmark-list');
 	const bookmarksListTitle = document.getElementById('bookmarks-list-title');
-    const sortedBookmarks = getSortedBookmarks(userId)
-	
+	const sortedBookmarks = getSortedBookmarks(userId);
+
 	bookmarksListTitle.textContent = `Bookmarks for User ${userId}`;
 	bookmarkList.innerHTML = '';
 
@@ -63,7 +61,9 @@ function displayBookmarks() {
 			likesBookmark.addEventListener('click', function () {
 				bookmark.likes += 1;
 				setData(userId, bookmarks);
-				document.getElementById('user-select').dispatchEvent(new Event('change'));
+				document
+					.getElementById('user-select')
+					.dispatchEvent(new Event('change'));
 			});
 
 			// add copy link button for each bookmark, implement copy-to-clipboard
@@ -95,10 +95,10 @@ function displayBookmarks() {
 function addBookmark(event) {
 	event.preventDefault();
 
-	const url 		= document.getElementById('bookmark-url').value.trim();
-	const title 	= document.getElementById('bookmark-title').value.trim();
+	const url = document.getElementById('bookmark-url').value.trim();
+	const title = document.getElementById('bookmark-title').value.trim();
 	const description = document.getElementById('description').value.trim();
-	const userId 	= document.getElementById('user-select').value;
+	const userId = document.getElementById('user-select').value;
 
 	if (userId === 'Select a user') {
 		showFeedback('Please select a user.', true);
