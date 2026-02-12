@@ -74,15 +74,12 @@ export function displayBookmarks() {
 				}, 1000);
 			});
 		});
-	} else {
-		const noDataListItem = document.createElement('li');
-		bookmarkList.appendChild(noDataListItem);	
-		const noData = document.createElement('div');
+	} else {	
+		const noData = document.createElement('li');
 		noData.className = 'no-data';
 		noData.setAttribute('role', 'status'); 
-		noData.setAttribute('aria-live', 'polite'); 
 		noData.textContent = 'There are no bookmarks for this user yet!';
-		noDataListItem.appendChild(noData);
+		bookmarkList.appendChild(noData);
 	}
 	document
 		.getElementById('bookmark-list')
