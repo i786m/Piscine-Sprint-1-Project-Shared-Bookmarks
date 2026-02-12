@@ -20,21 +20,30 @@ function populateUserSelector() {
 	});
 }
 
+function getSortedBookmarks(userId){
+  const bookmarks = getData(userId)
+	console.log(bookmarks)
+	const sorted = 
+	[...bookmarks].sort((a, b) => new Date(b.timestamp)-new Date(a.timestamp));
+  console.log(sorted)
+	return sorted
+}
+
+
 function displayBookmarks() {
 	const userId       = document.getElementById('user-select').value;
 	const bookmarkList = document.getElementById('bookmark-list');
 	const bookmarksListTitle = document.getElementById('bookmarks-list-title');
-	const bookmarks   = getData(userId);
-
+    const sortedBookmarks = getSortedBookmarks(userId)
 	
-	bookmarksListTitle.textContent = `Bookmarks for User ${selectedUser.value}`;
+	bookmarksListTitle.textContent = `Bookmarks for User ${userId}`;
 	bookmarkList.innerHTML = '';
 
-	if (bookmarks && bookmarks.length > 0) {
+	if (sortedBookmarks && sortedBookmarks.length > 0) {
 		// accessibility: added ARIA labels to buttons for screen reader clarity
 		// accessibility: kept heading structure consistent (see index.html)
 
-		[...bookmarks].reverse().forEach((bookmark) => {
+		sortedBookmarks.forEach((bookmark) => {
 			const listItem = document.createElement('li');
 			listItem.innerHTML = `
 				   <div class="bookmark-list-item" >
